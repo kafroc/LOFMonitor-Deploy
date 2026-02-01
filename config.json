@@ -1,7 +1,7 @@
 {
     "premium_threshold": 10.0,
     "discount_threshold": 30.0,
-    "last_alert_date": "2026-02-01",
+    "last_alert_date": "2026-01-01",
     "alerted_funds": [
         "168203",
         "164509",
