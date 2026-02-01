@@ -39,8 +39,6 @@ class ConfigManager:
         self.default_config = {
             "premium_threshold": 30.0,
             "discount_threshold": 40.0,
-            "dingtalk_webhook": "",
-            "dingtalk_secret": "",
             "last_alert_date": "",
             "alerted_funds": [],  # 当日已告警的基金代码列表
             "mode": "ui"  # "ui" or "terminal"
@@ -50,6 +48,12 @@ class ConfigManager:
             try:
                 with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
                     saved_config = json.load(f)
+                    
+                    # 剔除加载到的敏感信息（防止旧配置干扰）
+                    for key in ["dingtalk_webhook", "dingtalk_secret"]:
+                        if key in saved_config:
+                            del saved_config[key]
+                            
                     # 合并配置，确保新字段存在
                     self.config = self.default_config.copy()
                     self.config.update(saved_config)
@@ -62,8 +66,6 @@ class ConfigManager:
         
         # 从环境变量覆盖配置 (用于GitHub Actions)
         env_mapping = {
-            "DINGTALK_WEBHOOK": "dingtalk_webhook",
-            "DINGTALK_SECRET": "dingtalk_secret",
             "PREMIUM_THRESHOLD": "premium_threshold",
             "DISCOUNT_THRESHOLD": "discount_threshold"
         }
@@ -71,12 +73,13 @@ class ConfigManager:
             env_val = os.environ.get(env_key)
             if env_val:
                 try:
-                    if config_key.endswith("_threshold"):
-                        self.config[config_key] = float(env_val)
-                    else:
-                        self.config[config_key] = env_val
+                    self.config[config_key] = float(env_val)
                 except ValueError:
                     print(f"环境变量 {env_key} 格式错误: {env_val}")
+                    
+        # 钉钉配置直接从环境变量获取，不进入 config 字典（防止被误保存）
+        self.dingtalk_webhook = os.environ.get("DINGTALK_WEBHOOK", "")
+        self.dingtalk_secret = os.environ.get("DINGTALK_SECRET", "")
             
     def save_config(self):
         """保存配置"""
@@ -95,11 +98,22 @@ class ConfigManager:
             
     def get(self, key, default=None):
         """获取配置项"""
+        # 特殊处理钉钉配置，直接从变量获取
+        if key == "dingtalk_webhook":
+            return self.dingtalk_webhook or default
+        if key == "dingtalk_secret":
+            return self.dingtalk_secret or default
         return self.config.get(key, default)
         
     def set(self, key, value):
         """设置配置项并保存"""
-        self.config[key] = value
+        # 特殊处理钉钉配置，仅保存在内存中，save_config会过滤掉
+        if key == "dingtalk_webhook":
+            self.dingtalk_webhook = value
+        elif key == "dingtalk_secret":
+            self.dingtalk_secret = value
+        else:
+            self.config[key] = value
         self.save_config()
         
     def check_reset_daily_alerts(self):
