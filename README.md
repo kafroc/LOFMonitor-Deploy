@@ -83,7 +83,10 @@ python3 -m pip install -r requirements.txt
 
 ## ☁️ GitHub Actions 部署 (推荐)
 
-如果你不想购买 VPS，可以使用 GitHub Actions 免费运行此监控脚本。系统会每 **30 分钟** 自动运行一次。
+如果你不想购买 VPS，可以使用 GitHub Actions 免费运行此监控脚本。系统会每天在北京时间 **10:30, 14:00** 运行。
+
+### 0. Fork代码到个人仓库
+点击右上角的Fork，将仓库fork到个人仓库。 顺便请点一下star，谢谢！
 
 ### 1. 配置权限
 前往 GitHub 仓库：
@@ -101,7 +104,7 @@ python3 -m pip install -r requirements.txt
   - `DISCOUNT_THRESHOLD`: 折价阈值（如 `30.0`）。
 
 ### 3. 开始运行
-- 默认每 30 分钟自动运行。
+- 默认每天在北京时间 **10:30, 14:00** 运行。
 - 你也可以在 **Actions** 标签页手动点击 **Run workflow** 立即运行。
 
 ---
