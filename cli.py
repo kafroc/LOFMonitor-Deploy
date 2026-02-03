@@ -188,10 +188,20 @@ class LOFMonitorCLI:
                 if not config.is_fund_alerted(code):
                     msg = format_alert_message(code, name, alert_type, rate, market_price, nav_price, f_state)
                     send_dingtalk_alert(config.get("dingtalk_webhook"), config.get("dingtalk_secret"), msg, fund_code=code)
+ 
+        def print_progress(current, total, name, fund_data):
+            m_price = fund_data.get('market_price')
+            n_price = fund_data.get('nav_price')
+            p_rate_str = "N/A"
+            if m_price and n_price and n_price != 0:
+                p_rate = (m_price - n_price) / n_price * 100
+                p_rate_str = f"{p_rate:.2f}%"
+            
+            print(f"\r正在获取数据: {current}/{total} ({fund_data['code']} {fund_data['name']} 场内：{m_price or 'N/A'} 净值：{n_price or 'N/A'} 溢价率：{p_rate_str}) 状态：{fund_data['fund_state']}", end="", flush=True)
 
         # 获取数据并传入回调
         get_all_fund_data(
-            progress_callback=lambda c, t, n, fd: print(f"\r正在获取数据: {c}/{t} ({n[:10]} 场内价格：{fd['market_price']} 场外净值：{fd['nav_price']})", end="", flush=True),
+            progress_callback=print_progress,
             data_callback=on_fund_received
         )
         
