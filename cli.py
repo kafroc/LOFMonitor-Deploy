@@ -197,7 +197,7 @@ class LOFMonitorCLI:
                 p_rate = (m_price - n_price) / n_price * 100
                 p_rate_str = f"{p_rate:.2f}%"
             
-            print(f"\r正在获取数据: {current}/{total} ({fund_data['code']} {fund_data['name']} 场内：{m_price or 'N/A'} 净值：{n_price or 'N/A'} 溢价率：{p_rate_str}) 状态：{fund_data['fund_state']}", end="", flush=True)
+            print(f"\r正在获取数据: {current}/{total} ({fund_data['code']} {name[:15]} 场内：{m_price or 'N/A'} 净值：{n_price or 'N/A'} 溢价率：{p_rate_str}) 状态：{fund_data['fund_state']}", end="", flush=True)
 
         # 获取数据并传入回调
         get_all_fund_data(
