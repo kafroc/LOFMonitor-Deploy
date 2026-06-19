@@ -1,16 +1,16 @@
 {
     "premium_threshold": 10.0,
     "discount_threshold": 10.0,
-    "last_alert_date": "2026-06-18",
+    "last_alert_date": "2026-06-19",
     "alerted_funds": [
         "501098",
+        "501097",
         "501085",
         "501032",
         "501028",
         "501026",
         "501015",
-        "501001",
-        "501097"
+        "501001"
     ],
     "mode": "ui"
 }
