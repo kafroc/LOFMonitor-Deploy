@@ -3,7 +3,8 @@
     "discount_threshold": 10.0,
     "last_alert_date": "2026-10-23",
     "alerted_funds": [
-        "501218"
+        "501218",
+        "161133"
     ],
     "mode": "ui"
 }
